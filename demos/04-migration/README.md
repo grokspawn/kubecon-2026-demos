@@ -16,10 +16,13 @@ main.
 
 1. A cluster running OLMv0 with the `ecr-secret-operator` operator
    installed through a Subscription; OLMv1 installed alongside, idle.
-2. An eligibility check before catalog preparation, failing with a clear
-   reason (no ClusterCatalog yet) — catalog migration comes first.
-3. `migrate-catalogs-v0-to-v1` turning the operatorhubio CatalogSource
-   into a ClusterCatalog.
+2. `migrate-operators-v0-to-v1 check`: sixteen readiness, compatibility
+   and catalog-availability findings in human-readable form. (The OLMv1
+   experimental installer creates a default `operatorhubio`
+   ClusterCatalog, so catalog availability is already satisfied; without
+   one, the same check fails with an explicit "No ClusterCatalog found".)
+3. `migrate-catalogs-v0-to-v1` adopting the operatorhubio CatalogSource
+   into the ClusterCatalog.
 4. `migrate-operators-v0-to-v1 check`: readiness and compatibility findings
    in human-readable form (including acknowledgement flags for known
    v0→v1 semantic differences).
