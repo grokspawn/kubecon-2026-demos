@@ -1,9 +1,8 @@
-# Dedicated cluster for the migration demo. Mirrors library-olm's own
-# e2e kind configuration (control-plane + worker, pinned node image).
+# Dedicated cluster for the migration demo. Single control-plane node:
+# the migration flow has no multi-node requirements, and the demo host
+# runs the demos 1-3 cluster concurrently.
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
-    image: kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5
-  - role: worker
     image: kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5
