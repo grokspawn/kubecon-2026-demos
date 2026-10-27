@@ -1,0 +1,8 @@
+apiVersion: v2
+name: kubecon-chart-bad
+description: |
+  Deliberately non-compliant chart for the determinism-boundary beats:
+  one hook-annotated template and one template using a random function.
+  Both must be rejected with specific errors.
+type: application
+version: 0.1.0

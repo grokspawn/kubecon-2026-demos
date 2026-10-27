@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bad-random
+type: Opaque
+stringData:
+  password: {{ randAlphaNum 20 }}

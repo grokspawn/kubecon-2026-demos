@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kubecon-chart-demo
+description: |
+  A deliberately small, self-contained Helm chart for demonstrating
+  direct chart installation through OLM: one CRD (in templates/, per the
+  helm+v2 content design), one deployment, one service account. No hooks,
+  no remote dependencies, deterministic templates only.
+type: application
+version: 0.4.0
+appVersion: "0.4.0"

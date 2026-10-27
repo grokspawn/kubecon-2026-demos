@@ -1,0 +1,14 @@
+# Default values; user overrides arrive through the ClusterExtension's
+# spec.config.inline values object.
+replicaCount: 1
+
+greeting: hello-from-chart-defaults
+
+image:
+  repository: busybox
+  tag: "1.36"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi

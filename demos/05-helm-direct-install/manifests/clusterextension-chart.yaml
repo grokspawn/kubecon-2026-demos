@@ -1,0 +1,18 @@
+# Direct chart installation: the same ClusterExtension sourceType as demo
+# 1, pointed at a standard Helm chart OCI artifact. Values arrive through
+# spec.config.inline — the same inline-config mechanism as demo 3.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-chart-demo
+spec:
+  namespace: kubecon-chart-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/charts/kubecon-chart-demo:0.4.0
+  config:
+    configType: Inline
+    inline:
+      replicaCount: 2
+      greeting: configured-by-the-user

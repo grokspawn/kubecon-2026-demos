@@ -2,9 +2,11 @@
 
 # The operator-controller task clone (branch kubecon-2026-demo-direct-bundle).
 # Pinned commit is recorded in the demos repo README; setup.sh verifies it.
+# Both are overridable so stacked demos (e.g. the Helm direct-install demo
+# on kubecon-2026-demo-helm-direct) can reuse this environment.
 export OPCON_REPO_DIR="${OPCON_REPO_DIR:-$HOME/devel/agent-playground/kubecon-oc-direct-bundle}"
-export OPCON_BRANCH="kubecon-2026-demo-direct-bundle"
-export OPCON_EXPECTED_COMMIT="a33551f4e42d858056cb8d8191f9a70f4dcc80d5"
+export OPCON_BRANCH="${OPCON_BRANCH:-kubecon-2026-demo-direct-bundle}"
+export OPCON_EXPECTED_COMMIT="${OPCON_EXPECTED_COMMIT:-a33551f4e42d858056cb8d8191f9a70f4dcc80d5}"
 
 # kind cluster created by `make experimental-e2e-setup` (the stem of the
 # pattern rules). Kubeconfig is exported by the repo's Makefile chain.

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-chart
+  labels:
+    app: {{ .Release.Name }}-chart
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-chart
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-chart
+    spec:
+      serviceAccountName: {{ .Release.Name }}-chart
+      containers:
+        - name: manager
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "chart demo: {{ .Values.greeting }} (release {{ .Release.Name }} in {{ .Release.Namespace }})"
+              while true; do sleep 30; done
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "echo alive"]
+            initialDelaySeconds: 5
+            periodSeconds: 15

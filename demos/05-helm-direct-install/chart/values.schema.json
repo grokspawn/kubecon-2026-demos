@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "replicaCount": {"type": "integer", "minimum": 1, "maximum": 5},
+    "greeting": {"type": "string", "minLength": 1},
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": {"type": "string"},
+        "tag": {"type": "string"}
+      }
+    },
+    "resources": {"type": "object"}
+  },
+  "required": ["replicaCount", "greeting"]
+}

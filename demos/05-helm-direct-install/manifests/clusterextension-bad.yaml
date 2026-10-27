@@ -1,0 +1,13 @@
+# A chart outside the supported subset: a pre-install hook and a random
+# template function. Applying this must fail validation with specific
+# errors instead of installing unstable content.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-chart-bad
+spec:
+  namespace: kubecon-chart-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/charts/kubecon-chart-bad:0.1.0
