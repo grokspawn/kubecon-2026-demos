@@ -29,7 +29,10 @@ kind export kubeconfig --name "$KIND_CLUSTER" --kubeconfig "$KUBECONFIG"
 kubectl --kubeconfig "$KUBECONFIG" wait --for=condition=Ready nodes --all --timeout=5m
 
 step "Installing OLMv0 $OLM_V0_VERSION (released)"
-kubectl --kubeconfig "$KUBECONFIG" apply -f "https://github.com/operator-framework/operator-lifecycle-manager/releases/download/$OLM_V0_VERSION/crds.yaml"
+# Server-side apply: the clusterserviceversions CRD is too large for
+# client-side apply's last-applied-configuration annotation (262144-byte
+# annotation limit).
+kubectl --kubeconfig "$KUBECONFIG" apply --server-side --force-conflicts -f "https://github.com/operator-framework/operator-lifecycle-manager/releases/download/$OLM_V0_VERSION/crds.yaml"
 kubectl --kubeconfig "$KUBECONFIG" wait --for=condition=Established crd/clusterserviceversions.operators.coreos.com --timeout=120s
 kubectl --kubeconfig "$KUBECONFIG" apply -f "https://github.com/operator-framework/operator-lifecycle-manager/releases/download/$OLM_V0_VERSION/olm.yaml"
 kubectl --kubeconfig "$KUBECONFIG" -n olm wait --for=condition=Available deployment/olm-operator --timeout=300s
