@@ -1,0 +1,5 @@
+FROM scratch
+LABEL org.opencontainers.image.title="kubecon-demo-operator-bundle" \
+      org.opencontainers.image.version="0.1.0"
+COPY manifests /manifests
+COPY metadata /metadata

@@ -1,0 +1,5 @@
+properties:
+  - type: olm.package
+    value:
+      packageName: kubecon-demo-operator
+      version: 0.1.0

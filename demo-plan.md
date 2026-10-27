@@ -62,19 +62,19 @@ confirmation.
   `helm+v2` direction; not upstream functionality.
 - **Recording:** terminal, asciinema.
 
-## Secondary areas (not started)
+## Deferred areas (confirmed 2026-10-27: none for now)
 
-- **Catalog v2 typed content:** offline demo possible (schema validation of
-  mixed v1/v2 FBC documents). Requires implementing `olm.bundle.v2` /
-  `olm.package.v2` parsing in the operator-registry fork — medium effort,
-  design fidelity risk (lifecycle schema still TBD upstream).
-- **Shared successor-resolution logic:** no implementation found in
-  library-olm today; would be net-new library work. Defer unless we want
-  to demo a proposal.
-- **Historical shared-CRD failure (optional):** OLMv0 on kind; two
-  operators claiming the same CRD from different namespaces; observe the
-  failure mode referenced by the talk's history section. Low cost, high
-  narrative value.
+Kept out of this round by user decision; revisit after demos 1–5 are
+recorded:
+
+- Catalog v2 typed content (offline schema demo).
+- Shared successor-resolution logic (no implementation in library-olm).
+- Historical shared-CRD failure on OLMv0.
+
+## Sequencing (confirmed)
+
+Demos 1–4 first (existing/rebased code; scripts + builds + recordings),
+then demo 5's new `kubecon-2026-demo-helm-direct` sub-branch.
 
 ## Environment notes
 

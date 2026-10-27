@@ -1,0 +1,6 @@
+FROM busybox:1.36
+LABEL org.opencontainers.image.title="kubecon-demo-operator" \
+      org.opencontainers.image.version="0.1.0" \
+      org.opencontainers.image.description="Minimal demo operator image for direct bundle install."
+# The CSV deployment runs an inline watch loop; no binary payload is needed.
+CMD ["/bin/sh", "-c", "echo kubecon-demo-operator; while true; do sleep 30; done"]

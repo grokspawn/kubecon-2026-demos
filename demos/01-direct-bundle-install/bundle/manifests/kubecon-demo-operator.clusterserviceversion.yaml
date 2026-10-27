@@ -1,0 +1,104 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  name: kubecon-demo-operator.v0.1.0
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "demo.kubecon.io/v1alpha1",
+          "kind": "KubeconDemo",
+          "metadata": {
+            "name": "example"
+          },
+          "spec": {
+            "message": "hello kubecon"
+          }
+        }
+      ]
+    capabilities: Basic Install
+    categories: Demo
+    containerImage: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/operators/kubecon-demo-operator:v0.1.0
+    createdAt: "2026-10-27T00:00:00Z"
+    description: Minimal registry+v1 operator bundle used to demonstrate direct bundle installation.
+    repository: https://github.com/grokspawn/kubecon-2026-demos
+    support: KubeCon Demo Team
+spec:
+  version: 0.1.0
+  displayName: Kubecon Demo Operator
+  description: |
+    A deliberately small operator bundle. It establishes one custom
+    resource definition and runs one workload pod, so installation
+    progress, status and cleanup are easy to observe.
+  minKubeVersion: 1.19.0
+  keywords:
+    - demo
+  maintainers:
+    - name: KubeCon Demo Team
+      email: demo@example.invalid
+  provider:
+    name: KubeCon Demo Team
+  links:
+    - name: Demos
+      url: https://github.com/grokspawn/kubecon-2026-demos
+  installModes:
+    - type: AllNamespaces
+      supported: true
+  customresourcedefinitions:
+    owned:
+      - name: kubecondemos.demo.kubecon.io
+        version: v1alpha1
+        kind: KubeconDemo
+        displayName: Kubecon Demo
+        description: A demo custom resource echoed into its status.
+  install:
+    strategy: deployment
+    spec:
+      permissions:
+        - serviceAccountName: kubecon-demo-operator
+          rules:
+            - apiGroups:
+                - demo.kubecon.io
+              resources:
+                - kubecondemos
+              verbs:
+                - get
+                - list
+                - watch
+                - update
+                - patch
+            - apiGroups:
+                - ""
+              resources:
+                - events
+              verbs:
+                - create
+                - patch
+      deployments:
+        - name: kubecon-demo-operator
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: kubecon-demo-operator
+            template:
+              metadata:
+                labels:
+                  app: kubecon-demo-operator
+              spec:
+                serviceAccountName: kubecon-demo-operator
+                containers:
+                  - name: manager
+                    image: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/operators/kubecon-demo-operator:v0.1.0
+                    imagePullPolicy: IfNotPresent
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        echo "kubecon-demo-operator v0.1.0 watching kubecondemos.demo.kubecon.io"
+                        while true; do sleep 30; done
+                    livenessProbe:
+                      exec:
+                        command: ["/bin/sh", "-c", "echo alive"]
+                      initialDelaySeconds: 5
+                      periodSeconds: 15

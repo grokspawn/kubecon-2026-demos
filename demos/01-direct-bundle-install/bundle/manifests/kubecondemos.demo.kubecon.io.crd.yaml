@@ -1,0 +1,35 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: kubecondemos.demo.kubecon.io
+spec:
+  group: demo.kubecon.io
+  names:
+    plural: kubecondemos
+    singular: kubecondemo
+    kind: KubeconDemo
+    listKind: KubeconDemoList
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Message echoed by the demo operator status.
+            status:
+              type: object
+              properties:
+                observedGeneration:
+                  type: integer
+                phase:
+                  type: string
+      subresources:
+        status: {}

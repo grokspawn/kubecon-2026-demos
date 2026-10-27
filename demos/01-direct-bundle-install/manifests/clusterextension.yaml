@@ -1,0 +1,12 @@
+# Direct bundle install: no ClusterCatalog, no dependency resolution.
+# The ClusterExtension points straight at a registry+v1 bundle image.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-demo-operator
+spec:
+  namespace: kubecon-demo-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/bundles/kubecon-demo-operator-bundle:v0.1.0
