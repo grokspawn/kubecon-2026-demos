@@ -60,10 +60,15 @@ Extension points (verified on the branch):
 ## Status
 
 - [x] Branch `kubecon-2026-demo-helm-direct` created and pushed
-- [ ] Chart sniffing in the direct resolver
-- [ ] HelmManifestProvider with the restricted subset
-- [ ] Inline values merge and schema validation
-- [ ] Unit tests (sniffing, rendering, rejections)
-- [ ] Demo content: a small self-contained chart (CRD in templates/,
-      vendored subchart, no hooks)
-- [ ] run.sh + recording
+- [x] Chart sniffing in the direct resolver (extracted charts and
+      standard `helm push` tgz artifacts)
+- [x] HelmManifestProvider with the restricted subset
+- [x] Inline values merge and values.schema.json validation
+- [x] Unit tests (sniffing, both chart layouts, rendering, schema
+      validation, hook/keep/function/dependency rejections, dispatch)
+- [x] Demo content: a small self-contained chart (CRD in templates/,
+      values schema) plus a non-compliant chart for the rejection beats
+- [x] run.sh + recording (pending cluster validation)
+
+Implementation commit: `9973f48b` on
+`kubecon-2026-demo-helm-direct` (stacked on the direct-bundle branch).
