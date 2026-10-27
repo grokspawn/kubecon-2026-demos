@@ -29,12 +29,21 @@ fi
 curl -ksf "https://$REGISTRY_LOCAL_HOST/v2/" >/dev/null || { echo "registry unreachable" >&2; exit 1; }
 
 step "Building and pushing rollout demo images"
+push_bundle() { # $1=local tag $2=remote ref
+  local archive
+  archive="$(mktemp /tmp/kubecon-demo-img-XXXXXX.tar)"
+  docker save "$1" -o "$archive"
+  skopeo copy --insecure-policy --dest-tls-verify=false "docker-archive:$archive:docker.io/library/$1" "docker://$REGISTRY_LOCAL_HOST/$2"
+  rm -f "$archive"
+}
 pushd "$SCRIPT_DIR/bundle" >/dev/null
 docker build -q -t kubecon-rollout-operator:v0.2.0 -f Dockerfile.operator .
 docker build -q -t kubecon-rollout-operator-bundle:v0.2.0 -f Dockerfile.bundle .
-skopeo copy --dest-tls-verify=false docker-daemon:kubecon-rollout-operator:v0.2.0 "docker://$REGISTRY_LOCAL_HOST/operators/kubecon-rollout-operator:v0.2.0"
-skopeo copy --dest-tls-verify=false docker-daemon:kubecon-rollout-operator-bundle:v0.2.0 "docker://$REGISTRY_LOCAL_HOST/bundles/kubecon-rollout-operator-bundle:v0.2.0"
 popd >/dev/null
+push_bundle "kubecon-rollout-operator-bundle:v0.2.0" "bundles/kubecon-rollout-operator-bundle:v0.2.0"
+# Load the operator image onto the kind nodes (see demo 1 setup for why).
+docker tag "kubecon-rollout-operator:v0.2.0" "$REGISTRY_SERVICE_DNS/operators/kubecon-rollout-operator:v0.2.0"
+kind load docker-image "$REGISTRY_SERVICE_DNS/operators/kubecon-rollout-operator:v0.2.0" --name "$KIND_CLUSTER"
 
 step "Demo 2 content ready"
 echo "Run ./run.sh to execute the demo."

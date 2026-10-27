@@ -22,19 +22,25 @@ waitfor(){ printf '\033[1;36m$ %s\033[0m\n' "$*"; eval "$*"; }
 
 K="kubectl --kubeconfig $KUBECONFIG"
 
+# Idempotent reset so the demo can be re-recorded from a clean slate.
+$K delete clusterextension $DEMO_PACKAGE --ignore-not-found >/dev/null 2>&1 || true
+$K wait --for=delete clusterextension/$DEMO_PACKAGE --timeout=120s >/dev/null 2>&1 || true
+$K delete namespace $INSTALL_NAMESPACE --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
+
 say "1. Starting point: an OLMv1 cluster with no catalogs and no extensions"
-cmd "$K get clustercatalogs 2>/dev/null || echo 'No ClusterCatalog resources (direct install needs none)'"
-cmd "$K get clusterextensions 2>/dev/null || echo 'No ClusterExtension resources'"
+cmd "$K get clustercatalogs 2>&1 | head -2"
+cmd "$K get clusterextensions 2>&1 | head -2"
 
 say "2. The install source is a plain registry+v1 bundle image"
-cmd "skopeo inspect --tls-verify=false docker://$REGISTRY_LOCAL_HOST/bundles/$DEMO_PACKAGE-bundle:$DEMO_VERSION | jq -r '.Labels, .Digest'"
+cmd "skopeo inspect --insecure-policy --tls-verify=false docker://$REGISTRY_LOCAL_HOST/bundles/$DEMO_PACKAGE-bundle:v$DEMO_VERSION | jq -r '.Labels, .Digest'"
 cmd "cat $SCRIPT_DIR/manifests/clusterextension.yaml"
 
-say "3. Apply the ClusterExtension pointing directly at the bundle image"
+say "3. Create the install namespace, then apply the ClusterExtension pointing directly at the bundle image"
+cmd "$K create namespace $INSTALL_NAMESPACE --dry-run=client -o yaml | $K apply -f -"
 cmd "$K apply -f $SCRIPT_DIR/manifests/clusterextension.yaml"
 
 say "4. Watch installation progress"
-waitfor "$K wait --for=condition=Ready clusterextension/$DEMO_PACKAGE --timeout=300s || true"
+waitfor "$K wait --for=condition=Available clusterextension/$DEMO_PACKAGE --timeout=300s || true"
 cmd "$K get clusterextension $DEMO_PACKAGE -o yaml | sed -n '/status:/,\$p'"
 
 say "5. Installed resources are owned and labeled by the extension"

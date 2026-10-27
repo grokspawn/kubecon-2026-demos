@@ -19,8 +19,10 @@ used by the v0 controller and is deliberately excluded.
 1. One ClusterExtension with inline `deploymentConfig`: an environment
    variable, resource requests/limits and a node selector.
 2. The resulting Deployment template containing exactly those values.
-3. An attempt to set the excluded `selector` field, rejected by
-   admission/runtime validation with a specific message.
+3. An attempt to set the excluded `selector` field: the resource is
+   accepted by the API server, but reconciliation stops with an explicit
+   `InvalidConfiguration` condition naming the unknown field —
+   invalid configuration never reaches the cluster's workloads.
 4. Cleanup.
 
 ## Prerequisites

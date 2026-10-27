@@ -25,7 +25,13 @@ cmd()  { printf '\033[1;36m$ %s\033[0m\n' "$*"; eval "$*"; }
 
 K="kubectl --kubeconfig $KUBECONFIG"
 
+# Idempotent reset so the demo can be re-recorded from a clean slate.
+$K delete clusterextension $EXT_NAME --ignore-not-found >/dev/null 2>&1 || true
+$K wait --for=delete clusterextension/$EXT_NAME --timeout=120s >/dev/null 2>&1 || true
+$K delete namespace $INSTALL_NS --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
+
 say "1. Install the rollout demo operator"
+cmd "$K create namespace $INSTALL_NS --dry-run=client -o yaml | $K apply -f -"
 cmd "$K apply -f $SCRIPT_DIR/manifests/clusterextension.yaml"
 sleep 5
 
@@ -41,7 +47,7 @@ cmd "$K get clusterextension $EXT_NAME -o jsonpath='{.status.conditions}' | jq .
 
 say "4. Create the missing ConfigMap; the rollout completes"
 cmd "$K apply -f $SCRIPT_DIR/manifests/release-gate.yaml"
-cmd "$K wait --for=condition=Ready clusterextension/$EXT_NAME --timeout=180s"
+cmd "$K wait --for=condition=Available clusterextension/$EXT_NAME --timeout=180s"
 cmd "$K get clusterobjectset $COS -o jsonpath='{.status.observedPhases}' | jq ."
 cmd "$K -n $INSTALL_NS get pods"
 

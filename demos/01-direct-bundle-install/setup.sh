@@ -57,12 +57,28 @@ echo "$REGISTRY_PF_PID" > "$SCRIPT_DIR/.registry-pf-pid"
 step "Building and pushing demo content images"
 # The registry serves TLS with a certificate for its in-cluster DNS name;
 # from the host (via port-forward) the name does not match, so pushes use
-# --tls-verify=false. In-cluster consumers verify the real CA chain.
+# --dest-tls-verify=false. In-cluster consumers verify the real CA chain.
+# Host image export goes through docker-archive because the host skopeo
+# does not reach the colima/docker socket via DOCKER_HOST, and the host's
+# containers/image policy only allows specific transports, so this single
+# command uses --insecure-policy rather than editing the global policy.
+push_bundle() { # $1=local tag $2=remote ref
+  local archive
+  archive="$(mktemp /tmp/kubecon-demo-img-XXXXXX.tar)"
+  docker save "$1" -o "$archive"
+  skopeo copy --insecure-policy --dest-tls-verify=false "docker-archive:$archive:docker.io/library/$1" "docker://$REGISTRY_LOCAL_HOST/$2"
+  rm -f "$archive"
+}
 pushd "$SCRIPT_DIR/bundle" >/dev/null
 docker build -q -t "$DEMO_PACKAGE:$DEMO_VERSION" -f Dockerfile.operator .
 docker build -q -t "$DEMO_PACKAGE-bundle:$DEMO_VERSION" -f Dockerfile.bundle .
-skopeo copy --dest-tls-verify=false "docker-daemon:$DEMO_PACKAGE:$DEMO_VERSION" "docker://$REGISTRY_LOCAL_HOST/operators/$DEMO_PACKAGE:$DEMO_VERSION"
-skopeo copy --dest-tls-verify=false "docker-daemon:$DEMO_PACKAGE-bundle:$DEMO_VERSION" "docker://$REGISTRY_LOCAL_HOST/bundles/$DEMO_PACKAGE-bundle:$DEMO_VERSION"
+# The kubelet does not share the controller's CA trust for the demo
+# registry, so the operator image is loaded directly onto the kind nodes
+# under its in-cluster reference. The CSV sets imagePullPolicy: IfNotPresent,
+# so pods use the node-local image without contacting the registry.
+docker tag "$DEMO_PACKAGE:$DEMO_VERSION" "$REGISTRY_SERVICE_DNS/operators/$DEMO_PACKAGE:v$DEMO_VERSION"
+kind load docker-image "$REGISTRY_SERVICE_DNS/operators/$DEMO_PACKAGE:v$DEMO_VERSION" --name "$KIND_CLUSTER"
+push_bundle "$DEMO_PACKAGE-bundle:$DEMO_VERSION" "bundles/$DEMO_PACKAGE-bundle:v$DEMO_VERSION"
 popd >/dev/null
 
 step "Setup complete"
