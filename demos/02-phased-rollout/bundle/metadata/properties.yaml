@@ -1,0 +1,5 @@
+properties:
+  - type: olm.package
+    value:
+      packageName: kubecon-rollout-operator
+      version: 0.2.0

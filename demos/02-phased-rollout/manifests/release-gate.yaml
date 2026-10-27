@@ -1,0 +1,10 @@
+# The release gate. Withheld until step 4 of the demo; its absence keeps
+# the operator deployment pod in CreateContainerConfigError and the owning
+# ClusterObjectSet phase from stabilizing.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-gate
+  namespace: kubecon-rollout-system
+data:
+  status: open

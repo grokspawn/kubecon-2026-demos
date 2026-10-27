@@ -1,0 +1,34 @@
+# Demo 3: user-specified deployment configuration.
+# Reuses demo 1's bundle (kubecon-demo-operator v0.1.0). Two
+# ClusterExtensions are applied in sequence:
+#   1. clusterextension-configured.yaml — valid inline deploymentConfig
+#      (env, resources, nodeSelector) merged into the rendered deployment.
+#   2. clusterextension-invalid.yaml — a field outside the supported
+#      subset (selector, deliberately excluded from the v0
+#      SubscriptionConfig-derived schema) is rejected by validation.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-demo-operator
+spec:
+  namespace: kubecon-demo-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/bundles/kubecon-demo-operator-bundle:v0.1.0
+  config:
+    configType: Inline
+    inline:
+      deploymentConfig:
+        env:
+          - name: DEMO_GREETING
+            value: configured-by-the-user
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        nodeSelector:
+          kubernetes.io/os: linux

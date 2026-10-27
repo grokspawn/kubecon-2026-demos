@@ -1,0 +1,92 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  name: kubecon-rollout-operator.v0.2.0
+  annotations:
+    capabilities: Basic Install
+    categories: Demo
+    containerImage: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/operators/kubecon-rollout-operator:v0.2.0
+    createdAt: "2026-10-27T00:00:00Z"
+    description: Registry+v1 bundle whose deployment gates on a missing ConfigMap, for observing phased rollout progress.
+    repository: https://github.com/grokspawn/kubecon-2026-demos
+    support: KubeCon Demo Team
+spec:
+  version: 0.2.0
+  displayName: Kubecon Rollout Operator
+  description: |
+    Installs one CRD and one deployment. The deployment pod mounts a
+    ConfigMap named release-gate that the demo withholds at first, so the
+    rollout stalls in a visible, diagnosable state until the gate is
+    created.
+  minKubeVersion: 1.19.0
+  keywords:
+    - demo
+  maintainers:
+    - name: KubeCon Demo Team
+      email: demo@example.invalid
+  provider:
+    name: KubeCon Demo Team
+  links:
+    - name: Demos
+      url: https://github.com/grokspawn/kubecon-2026-demos
+  installModes:
+    - type: AllNamespaces
+      supported: true
+  customresourcedefinitions:
+    owned:
+      - name: rolloutdemos.demo.kubecon.io
+        version: v1alpha1
+        kind: RolloutDemo
+        displayName: Rollout Demo
+        description: Marker resource for the rollout demo.
+  install:
+    strategy: deployment
+    spec:
+      permissions:
+        - serviceAccountName: kubecon-rollout-operator
+          rules:
+            - apiGroups:
+                - demo.kubecon.io
+              resources:
+                - rolloutdemos
+              verbs:
+                - get
+                - list
+                - watch
+      deployments:
+        - name: kubecon-rollout-operator
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: kubecon-rollout-operator
+            template:
+              metadata:
+                labels:
+                  app: kubecon-rollout-operator
+              spec:
+                serviceAccountName: kubecon-rollout-operator
+                containers:
+                  - name: manager
+                    image: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/operators/kubecon-rollout-operator:v0.2.0
+                    imagePullPolicy: IfNotPresent
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        echo "kubecon-rollout-operator v0.2.0; gate value: $(cat /gate/status)"
+                        while true; do sleep 30; done
+                    volumeMounts:
+                      - name: gate
+                        mountPath: /gate
+                    livenessProbe:
+                      exec:
+                        command: ["/bin/sh", "-c", "echo alive"]
+                      initialDelaySeconds: 5
+                      periodSeconds: 15
+                volumes:
+                  # Deliberately required-but-withheld: the pod cannot be
+                  # created until the demo applies release-gate.yaml.
+                  - name: gate
+                    configMap:
+                      name: release-gate

@@ -1,0 +1,20 @@
+# Deliberately invalid: `selector` existed in OLMv0's SubscriptionConfig
+# but was never used and is excluded from the v1 deployment configuration
+# schema. Applying this manifest is rejected with a validation error.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-demo-operator-invalid
+spec:
+  namespace: kubecon-demo-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/bundles/kubecon-demo-operator-bundle:v0.1.0
+  config:
+    configType: Inline
+    inline:
+      deploymentConfig:
+        selector:
+          matchLabels:
+            unsupported: field

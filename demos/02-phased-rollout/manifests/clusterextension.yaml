@@ -1,0 +1,11 @@
+# Direct install of the rollout demo operator.
+apiVersion: olm.operatorframework.io/v1
+kind: ClusterExtension
+metadata:
+  name: kubecon-rollout-operator
+spec:
+  namespace: kubecon-rollout-system
+  source:
+    sourceType: OCIImage
+    ociImage:
+      ref: docker-registry.kubecon-demo-registry.svc.cluster.local:5000/bundles/kubecon-rollout-operator-bundle:v0.2.0
