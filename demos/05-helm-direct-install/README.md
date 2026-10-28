@@ -57,6 +57,24 @@ Extension points (verified on the branch):
 4. Determinism boundaries: a chart using `helm.sh/hook` (or a changing
    template function) rejected with a specific error.
 
+## Implementation notes from cluster validation
+
+Two findings from running this against a real cluster, recorded for the
+upstream design discussion:
+
+- The controller's image puller (containers/image) refuses to unpack
+  standard `helm push` artifacts, because their cncf.helm config media
+  type is treated as a non-image artifact. The demo assembles chart
+  artifacts with a standard OCI image config (the chart layer keeps the
+  cncf.helm tar+gzip media type and the filesystem layout is identical);
+  supporting cncf.helm configs in the puller is an open upstream item.
+- The image cache unpacks the chart's tar+gzip layer, leaving the chart
+  under its name directory; content sniffing recognizes all three shapes
+  (root Chart.yaml, single root tgz, single root chart directory).
+
+The bad-chart rejection surfaces as a `Retrying` condition whose message
+names the offending template and function.
+
 ## Status
 
 - [x] Branch `kubecon-2026-demo-helm-direct` created and pushed
@@ -68,7 +86,7 @@ Extension points (verified on the branch):
       validation, hook/keep/function/dependency rejections, dispatch)
 - [x] Demo content: a small self-contained chart (CRD in templates/,
       values schema) plus a non-compliant chart for the rejection beats
-- [x] run.sh + recording (pending cluster validation)
+- [x] run.sh + recording (validated on a live cluster)
 
-Implementation commit: `9973f48b` on
+Implementation commits through `f22bdf55`+ on
 `kubecon-2026-demo-helm-direct` (stacked on the direct-bundle branch).

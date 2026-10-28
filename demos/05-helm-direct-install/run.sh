@@ -32,7 +32,7 @@ $K delete clusterextension $EXT_NAME kubecon-chart-bad --ignore-not-found >/dev/
 $K delete namespace $INSTALL_NS --ignore-not-found --timeout=60s >/dev/null 2>&1 || true
 
 say "1. The install source is a standard chart OCI artifact"
-cmd "oras manifest fetch --insecure --pretty $REGISTRY_LOCAL_HOST/charts/kubecon-chart-demo:0.4.0 | head -25"
+cmd "skopeo inspect --raw --insecure-policy --tls-verify=false docker://$REGISTRY_LOCAL_HOST/charts/kubecon-chart-demo:0.4.0 | jq ."
 cmd "cat $SCRIPT_DIR/chart/Chart.yaml"
 cmd "ls $SCRIPT_DIR/chart/templates/"
 
