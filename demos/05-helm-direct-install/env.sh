@@ -4,7 +4,7 @@
 # OPCON_BRANCH/OPCON_EXPECTED_COMMIT are consumed by demo 1's env.sh
 # (sourced below), whose defaults they override.
 export OPCON_BRANCH="kubecon-2026-demo-helm-direct"
-export OPCON_EXPECTED_COMMIT="9973f48b6e8936c56d3a50558e12c4bfd91b9540"
+export OPCON_EXPECTED_COMMIT="5efa74957f5ce0c5d4414449f1d6aed26e5b03a1"
 
 # shellcheck source=../01-direct-bundle-install/env.sh
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../01-direct-bundle-install/env.sh"
