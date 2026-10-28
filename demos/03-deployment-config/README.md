@@ -1,6 +1,6 @@
 # Demo 3 — User control of extension deployments
 
-Shows the operator-author / user configuration exchange from slide 7 of
+Shows the operator-author / user configuration exchange from slide 8 of
 the talk: the user applies a ClusterExtension with
 `spec.config.inline.deploymentConfig`, and the rendered operator
 Deployment carries those values. Configuration outside the supported

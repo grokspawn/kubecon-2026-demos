@@ -10,6 +10,7 @@ mkdir -p "$(dirname "$OUT")"
 # A comfortable typing/scrolling pace for presentation playback.
 export ASCIINEMA_SPEED=1
 asciinema rec \
+  --return \
   --command "$SCRIPT_DIR/run.sh" \
   --overwrite \
   --idle-time-limit 2 \

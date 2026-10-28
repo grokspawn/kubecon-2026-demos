@@ -7,18 +7,21 @@ No ClusterCatalog is created and no dependency resolution runs — the
 carried on this fork's `kubecon-2026-demo-direct-bundle` branch) pulls and
 unpacks the bundle image itself.
 
-This maps to slide 5 of the talk ("Install a bundle directly").
+This maps to slide 10 of the talk ("Install a bundle directly") and also
+demonstrates slide 6 ("Namespace Management").
 
 ## What the audience sees
 
 1. An OLMv1 cluster with no catalogs and no extensions.
 2. A bundle image in a registry, identified by digest.
-3. One `ClusterExtension` with `sourceType: OCIImage` and an image ref.
+3. One `ClusterExtension` with `sourceType: OCIImage` and an image ref,
+   omitting `spec.namespace`.
 4. Installation progress and conditions.
-5. The managed result: CRD, deployment, service account, RBAC — owned
-   and labeled by the extension.
+5. The generated `kubecon-demo-operator-system` namespace and its
+   ClusterObjectSet controller owner, plus the ClusterObjectDeployment,
+   revision, CRD, deployment, service account and RBAC.
 6. The operator's API exercised with a custom resource.
-7. Deletion of the extension cleaning up everything it manages.
+7. Deletion of the extension and the managed namespace and CRD.
 
 ## Prerequisites
 
@@ -29,6 +32,16 @@ This maps to slide 5 of the talk ("Install a bundle directly").
 - Network access (kind node image, cert-manager, registry:3, busybox)
 
 ## Run
+
+Use only the disposable demo cluster. `run.sh` first deletes the demo
+ClusterExtension and, at the end, deletes it again. This removes the entire
+managed namespace, including any unrelated resources in it; deleting the demo
+CRD also deletes its custom resources in **all** namespaces. Do not put
+valuable data in this cluster. `setup.sh` creates a kind cluster and
+`teardown.sh` deletes it. Check the kubeconfig and cluster before running.
+If cleanup stalls or an existing namespace/CRD blocks the baseline, the script
+stops; inspect ownership and data before any manual cleanup. It does not
+delete leftover namespaces or CRDs directly.
 
 ```bash
 ./setup.sh    # kind cluster + OLMv1 (experimental gates) + registry + images
@@ -56,6 +69,15 @@ This maps to slide 5 of the talk ("Install a bundle directly").
 - The bundle is a minimal, valid registry+v1 bundle: one CRD
   (`kubecondemos.demo.kubecon.io`), one CSV with a single deployment, and
   the `olm.package` property in `metadata/properties.yaml`.
+- With the experimental CRD and `BoxcutterRuntime`, omitting
+  `spec.namespace` renders a managed Namespace. This bundle has no suggested
+  namespace annotations, so the pinned controller uses the package-name
+  fallback `kubecon-demo-operator-system`. The COD produces a COS revision
+  that owns the namespace. With `spec.namespace` set, the namespace must
+  already exist and is user-managed; the mode cannot be changed in place.
+- Keep a bundle's resolved managed namespace stable across upgrades: changing
+  its namespace metadata can delete the old namespace and everything in it
+  when the old revision is archived. Use a separate migration to move it.
 
 ## Notes and caveats
 
@@ -67,3 +89,5 @@ This maps to slide 5 of the talk ("Install a bundle directly").
   it surfaces reconciler bugs, they belong in the upstream PR review.
 - The demo operator container is an intentionally trivial watcher; the
   subject of the demo is the lifecycle, not the operator's logic.
+- `recordings/demo-01.cast` shows the managed-namespace scenario on the
+  disposable demo cluster.

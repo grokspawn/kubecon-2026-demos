@@ -28,4 +28,5 @@ export BUNDLE_REF="$REGISTRY_SERVICE_DNS/bundles/kubecon-demo-operator-bundle:v0
 export OPERATOR_REF="$REGISTRY_SERVICE_DNS/operators/kubecon-demo-operator:v0.1.0"
 export DEMO_PACKAGE="kubecon-demo-operator"
 export DEMO_VERSION="0.1.0"
-export INSTALL_NAMESPACE="kubecon-demo-system"
+# The bundle has no suggested namespace; its package name determines this fallback.
+export INSTALL_NAMESPACE="kubecon-demo-operator-system"

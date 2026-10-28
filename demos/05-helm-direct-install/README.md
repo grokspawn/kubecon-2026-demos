@@ -4,7 +4,7 @@ The evolution path from demo 1: the same direct-install mechanism, pointed
 at a chart's OCI artifact instead of a registry+v1 bundle image. This is
 demo-scope exploration of the `helm+v2` direction recorded in the Helm
 brief — it is not upstream functionality and makes no catalog/lifecycle
-claims. Maps to slide 10 of the talk ("Planned Helm content support").
+claims. Maps to slide 11 of the talk ("Planned Helm content support").
 
 Implementation lives on the grokspawn fork branch
 `kubecon-2026-demo-helm-direct`, stacked above

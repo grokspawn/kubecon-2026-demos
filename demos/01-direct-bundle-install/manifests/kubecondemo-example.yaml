@@ -2,6 +2,6 @@ apiVersion: demo.kubecon.io/v1alpha1
 kind: KubeconDemo
 metadata:
   name: example
-  namespace: kubecon-demo-system
+  namespace: kubecon-demo-operator-system
 spec:
   message: hello kubecon

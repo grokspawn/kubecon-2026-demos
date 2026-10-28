@@ -5,7 +5,7 @@ Shows the rollout machinery behind a ClusterExtension install through the
 ClusterObjectDeployment (COD) per extension; the COD controller owns the
 revision lifecycle, cutting immutable ClusterObjectSet (COS) revisions
 from the COD's template and managing rollout progress, archival and
-history pruning (`revisionHistoryLimit`, default 5). This maps to slide 6
+history pruning (`revisionHistoryLimit`, default 5). This maps to slide 7
 of the talk ("Inspect phased resource rollouts").
 
 This is the current upstream architecture (operator-controller #3058,

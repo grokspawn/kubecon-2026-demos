@@ -2,7 +2,7 @@
 
 Migrates a live, OLMv0-managed operator to OLMv1 management using the
 [library-olm](https://github.com/operator-framework/library-olm) migration
-tooling. Maps to slide 8 of the talk ("OLMv0 → OLMv1 migration") and carries
+tooling. Maps to slide 9 of the talk ("OLMv0 → OLMv1 migration") and carries
 the structured-output story (slide material on automation/model consumption):
 the same readiness check is shown human-readable and as JSON Lines.
 
