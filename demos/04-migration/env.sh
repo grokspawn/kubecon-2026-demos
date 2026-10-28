@@ -5,9 +5,11 @@ export OLM_V0_VERSION="v0.46.0"
 export OLM_V1_VERSION="v1.12.0"
 export OLM_V1_INSTALL_SHA256="5c3c86e6d54b21ae7b0b566145ef703f8230e3f4cf4326541d42015a2a195970"
 
-# Dedicated kind cluster (separate from demos 1-3).
+# Dedicated kind cluster (separate from demos 1-3). The kubeconfig is
+# kept OUTSIDE this repository: it carries the cluster's admin client
+# credentials and the repo is public.
 export KIND_CLUSTER="kubecon-migration"
-export KUBECONFIG="${KUBECONFIG:-$HOME/devel/kubecon-2026-demos/demos/04-migration/.kubeconfig}"
+export KUBECONFIG="${KUBECONFIG:-$HOME/.kube/kubecon-migration.kubeconfig}"
 export KIND_NODE_IMAGE="kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5"
 
 # library-olm task clone (branch kubecon-2026-demo, tracks upstream main).

@@ -1,0 +1,6 @@
+# Runtime state — never commit these
+*.kubeconfig
+.kubeconfig
+.install-experimental.sh
+.registry-pf-pid
+.registry-ca.crt
