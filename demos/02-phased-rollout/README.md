@@ -18,6 +18,13 @@ The ClusterObjectDeployment and Boxcutter runtime are in active
 development upstream and controlled by the `BoxcutterRuntime` feature
 gate, which the demo cluster enables.
 
+## Recording
+
+![Demo 2 — inspect phased resource rollouts (looping GIF)](recordings/demo-02.gif)
+
+Looping GIF rendered from [`recordings/demo-02.cast`](recordings/demo-02.cast);
+replay the original with `asciinema play recordings/demo-02.cast`.
+
 ## What the audience sees
 
 1. A direct bundle install (as in demo 1) creating a

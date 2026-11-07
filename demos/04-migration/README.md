@@ -12,6 +12,13 @@ pins library-olm's own e2e uses — and builds the migration CLIs from the
 `kubecon-2026-demo` branch of the grokspawn fork, which tracks upstream
 main.
 
+## Recording
+
+![Demo 4 — OLMv0 to OLMv1 migration with structured output (looping GIF)](recordings/demo-04.gif)
+
+Looping GIF rendered from [`recordings/demo-04.cast`](recordings/demo-04.cast);
+replay the original with `asciinema play recordings/demo-04.cast`.
+
 ## What the audience sees
 
 1. A cluster running OLMv0 with the `ecr-secret-operator` operator

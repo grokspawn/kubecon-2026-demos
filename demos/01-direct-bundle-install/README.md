@@ -10,6 +10,13 @@ unpacks the bundle image itself.
 This maps to slide 10 of the talk ("Install a bundle directly") and also
 demonstrates slide 6 ("Namespace Management").
 
+## Recording
+
+![Demo 1 — install a bundle directly (looping GIF)](recordings/demo-01.gif)
+
+Looping GIF rendered from [`recordings/demo-01.cast`](recordings/demo-01.cast);
+replay the original with `asciinema play recordings/demo-01.cast`.
+
 ## What the audience sees
 
 1. An OLMv1 cluster with no catalogs and no extensions.

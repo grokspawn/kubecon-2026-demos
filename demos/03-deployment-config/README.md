@@ -14,6 +14,13 @@ from OLMv0's SubscriptionConfig: `nodeSelector`, `tolerations`,
 `annotations`, plus `watchNamespace`. The v0 `selector` field was never
 used by the v0 controller and is deliberately excluded.
 
+## Recording
+
+![Demo 3 — user control of extension deployments (looping GIF)](recordings/demo-03.gif)
+
+Looping GIF rendered from [`recordings/demo-03.cast`](recordings/demo-03.cast);
+replay the original with `asciinema play recordings/demo-03.cast`.
+
 ## What the audience sees
 
 1. One ClusterExtension with inline `deploymentConfig`: an environment

@@ -10,6 +10,13 @@ Implementation lives on the grokspawn fork branch
 `kubecon-2026-demo-helm-direct`, stacked above
 `kubecon-2026-demo-direct-bundle` (which carries upstream PR #2907).
 
+## Recording
+
+![Demo 5 — install a Helm chart directly (looping GIF)](recordings/demo-05.gif)
+
+Looping GIF rendered from [`recordings/demo-05.cast`](recordings/demo-05.cast);
+replay the original with `asciinema play recordings/demo-05.cast`.
+
 ## Design
 
 The direct installer is source-sniffing: the OCI image is pulled into a
